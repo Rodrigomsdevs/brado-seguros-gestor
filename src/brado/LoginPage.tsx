@@ -19,6 +19,8 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
   const [erro, setErro] = useState('');
   const [focusField, setFocusField] = useState<string | null>(null);
 
+  const imgBg = theme === 'light' ? '#c5ddf3' : '#141c28';
+
   const handleLogin = () => {
     const u = usuarios.find(u => u.email === email && u.senha === senha);
     if (u) { onLogin(u); }
@@ -27,82 +29,86 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex', fontFamily: fonts, position: 'relative',
-      background: c.bg,
+      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: fonts, background: imgBg, position: 'relative',
     }}>
       {/* Theme toggle */}
       <button onClick={toggle} style={{
-        position: 'absolute', top: 20, right: 20, zIndex: 10, background: 'rgba(255,255,255,0.15)',
-        backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 24,
-        padding: '6px 14px', cursor: 'pointer', fontSize: 12, color: '#fff',
+        position: 'absolute', top: 20, right: 20, zIndex: 10,
+        background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
+        border: '1px solid rgba(255,255,255,0.2)', borderRadius: 24,
+        padding: '6px 14px', cursor: 'pointer', fontSize: 12,
+        color: theme === 'light' ? '#1a3a5c' : '#ccc',
         display: 'flex', alignItems: 'center', gap: 6,
       }}>
         {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
         {theme === 'light' ? 'Escuro' : 'Claro'}
       </button>
 
-      {/* Left — image area with strong right border */}
+      {/* Main container — image fills everything, form floats on left */}
       <div style={{
-        flex: 1, position: 'relative', overflow: 'hidden',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: theme === 'light'
-          ? 'linear-gradient(135deg, #dce8f5 0%, #c5d9f0 50%, #b8cfe8 100%)'
-          : 'linear-gradient(135deg, #141c28 0%, #1a2636 50%, #0f1820 100%)',
-        borderRight: `5px solid ${c.primary}`,
+        width: '92%', maxWidth: 1200, height: '88vh',
+        borderRadius: 28, overflow: 'hidden', position: 'relative',
+        display: 'flex',
+        boxShadow: theme === 'light'
+          ? '0 20px 60px rgba(0,0,0,0.12)'
+          : '0 20px 60px rgba(0,0,0,0.5)',
       }}>
-        <img
-          src={loginBg}
-          alt="Proteção e segurança"
-          style={{
-            maxWidth: '65%', maxHeight: '65%', objectFit: 'contain',
-            opacity: theme === 'light' ? 0.85 : 0.6,
-          }}
-        />
-        {/* Bottom text on image */}
+        {/* Image — full background right side */}
         <div style={{
-          position: 'absolute', bottom: 44, left: 40, right: 40, textAlign: 'center',
+          position: 'absolute', inset: 0,
+          background: theme === 'light'
+            ? 'linear-gradient(135deg, #dce8f5 0%, #c5ddf3 50%, #b8cfe8 100%)'
+            : 'linear-gradient(135deg, #141c28 0%, #1a2636 50%, #0f1820 100%)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
+          <img
+            src={loginBg}
+            alt="Proteção e segurança"
+            style={{
+              position: 'absolute', right: '8%', top: '50%', transform: 'translateY(-50%)',
+              width: '50%', maxHeight: '70%', objectFit: 'contain',
+              opacity: theme === 'light' ? 0.8 : 0.5,
+            }}
+          />
+          {/* Bottom text */}
           <div style={{
-            fontSize: 24, fontWeight: 700,
-            color: theme === 'light' ? '#1a3a5c' : '#c0d8f0',
-            marginBottom: 6,
+            position: 'absolute', bottom: 36, right: 40,
+            textAlign: 'right',
           }}>
-            Proteção completa para o que importa
-          </div>
-          <div style={{
-            fontSize: 14, color: theme === 'light' ? '#5a7a9a' : '#7a9aba',
-          }}>
-            Auto · Vida · Empresarial · Residencial
+            <div style={{ fontSize: 20, fontWeight: 700, color: theme === 'light' ? '#1a3a5c' : '#c0d8f0' }}>
+              Proteção completa para o que importa
+            </div>
+            <div style={{ fontSize: 13, color: theme === 'light' ? '#5a7a9a' : '#7a9aba', marginTop: 4 }}>
+              Auto · Vida · Empresarial · Residencial
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Right — floating form */}
-      <div style={{
-        width: 440, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '40px 32px',
-        background: theme === 'light'
-          ? 'linear-gradient(180deg, #f4f6f9 0%, #eaecf0 100%)'
-          : 'linear-gradient(180deg, #1e1e1e 0%, #181818 100%)',
-      }}>
+        {/* Floating form card on the left */}
         <div style={{
-          width: '100%', maxWidth: 360, background: c.modalBg, borderRadius: 20,
-          padding: '40px 32px 32px',
+          position: 'relative', zIndex: 2,
+          width: 400, margin: '40px 0 40px 40px',
+          background: c.modalBg, borderRadius: 20,
+          padding: '36px 30px 30px',
           boxShadow: theme === 'light'
-            ? '0 8px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.04)'
-            : '0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)',
+            ? '0 12px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)'
+            : '0 12px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          alignSelf: 'stretch',
+          overflowY: 'auto',
         }}>
           {/* Logo */}
           <div style={{
-            width: 52, height: 52, borderRadius: 14, margin: '0 auto 12px',
+            width: 50, height: 50, borderRadius: 14, margin: '0 auto 12px',
             background: `linear-gradient(135deg, ${c.primary}, ${theme === 'light' ? '#1565c0' : '#82b1ff'})`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: `0 6px 20px ${c.primary}33`,
           }}>
-            <Shield size={26} color="#fff" strokeWidth={2} />
+            <Shield size={24} color="#fff" strokeWidth={2} />
           </div>
           <div style={{ fontSize: 24, fontWeight: 800, color: c.text, textAlign: 'center', letterSpacing: 2, marginBottom: 1 }}>BRADO</div>
-          <div style={{ fontSize: 11, color: c.textMuted, textAlign: 'center', marginBottom: 30, letterSpacing: 0.5 }}>Corretora de Seguros</div>
+          <div style={{ fontSize: 11, color: c.textMuted, textAlign: 'center', marginBottom: 28, letterSpacing: 0.5 }}>Corretora de Seguros</div>
 
           {/* Email */}
           <div style={{ marginBottom: 12, position: 'relative' }}>

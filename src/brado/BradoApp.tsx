@@ -140,7 +140,7 @@ const BradoInner: React.FC = () => {
               background: c.cardBg, border: `1px solid ${c.border}`, borderRadius: 20, padding: '6px 14px',
               cursor: 'pointer', fontSize: 18, color: c.text, display: 'flex', alignItems: 'center', gap: 4, lineHeight: 1
             }} title={theme === 'light' ? 'Modo escuro' : 'Modo claro'}>
-              {theme === 'light' ? '🌙' : '☀️'}
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
             </button>
             {/* User badge */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 14px', borderRadius: 24, background: c.cardBg }}>

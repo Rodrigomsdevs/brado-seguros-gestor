@@ -151,7 +151,7 @@ const BradoInner: React.FC = () => {
                 <div style={{ fontSize: 13, fontWeight: 500 }}>{usuarioLogado.nome}</div>
                 <div style={{ fontSize: 11, color: c.textMuted }}>{usuarioLogado.perfil}</div>
               </div>
-              <button style={{ background: 'none', border: 'none', color: c.textMuted, cursor: 'pointer', fontSize: 12, marginLeft: 4 }} onClick={() => setUsuarioLogado(null)}>Sair</button>
+              <button style={{ background: 'none', border: 'none', color: c.textMuted, cursor: 'pointer', fontSize: 12, marginLeft: 4, display: 'flex', alignItems: 'center', gap: 4 }} onClick={() => setUsuarioLogado(null)}><LogOut size={14} /> Sair</button>
             </div>
           </div>
         </div>

@@ -3,7 +3,6 @@ import { getStyles, getColors, fonts } from './styles';
 import { useTheme } from './ThemeContext';
 import { Usuario } from './types';
 import { Moon, Sun } from 'lucide-react';
-import { Usuario } from './types';
 
 interface LoginProps {
   onLogin: (u: Usuario) => void;

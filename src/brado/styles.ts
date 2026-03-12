@@ -63,11 +63,11 @@ export const fonts = "'Google Sans', 'Segoe UI', Roboto, sans-serif";
 
 export function getStyles(c: Colors) {
   return {
-    page: { minHeight: '100vh', background: c.bg, fontFamily: fonts, color: c.text, display: 'flex' } as CSSProperties,
-    sidebar: { width: 230, padding: '20px 14px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto', height: '100vh', position: 'sticky', top: 0 } as CSSProperties,
-    mainArea: { flex: 1, display: 'flex', flexDirection: 'column', padding: '16px 24px 24px 8px', minHeight: '100vh', overflow: 'auto' } as CSSProperties,
-    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, padding: '0 4px' } as CSSProperties,
-    contentBox: { background: c.white, borderRadius: 16, boxShadow: '0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)', padding: 24, flex: 1 } as CSSProperties,
+    page: { height: '100vh', background: c.bg, fontFamily: fonts, color: c.text, display: 'flex', overflow: 'hidden' } as CSSProperties,
+    sidebar: { width: 230, padding: '20px 14px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto', height: '100vh' } as CSSProperties,
+    mainArea: { flex: 1, display: 'flex', flexDirection: 'column', padding: '16px 24px 24px 8px', height: '100vh', overflow: 'hidden' } as CSSProperties,
+    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, padding: '0 4px', flexShrink: 0 } as CSSProperties,
+    contentBox: { background: c.white, borderRadius: 16, boxShadow: '0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)', padding: 24, flex: 1, overflow: 'auto', minHeight: 0 } as CSSProperties,
     menuItem: (active: boolean): CSSProperties => ({
       display: 'flex', alignItems: 'center', gap: 12, padding: '8px 16px', borderRadius: 24, cursor: 'pointer', fontSize: 14, fontWeight: active ? 600 : 400,
       background: active ? c.primaryLight : 'transparent', color: active ? c.primary : c.text, transition: 'background 0.15s',

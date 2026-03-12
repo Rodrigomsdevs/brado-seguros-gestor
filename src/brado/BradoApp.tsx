@@ -109,6 +109,7 @@ const BradoInner: React.FC = () => {
             <div key={item.id} style={s.menuItem(page === item.id)} onClick={() => setPage(item.id)}
               onMouseEnter={e => { if (page !== item.id) (e.currentTarget.style.background = c.hoverBg); }}
               onMouseLeave={e => { if (page !== item.id) (e.currentTarget.style.background = 'transparent'); }}>
+              {menuIcons[item.id]}
               <span style={{ flex: 1 }}>{item.label}</span>
               {item.id === 'sinistros' && sinistrosAbertos > 0 && <span style={{ ...s.badge(c.danger, c.dangerBg), fontSize: 11 }}>{sinistrosAbertos}</span>}
               {item.id === 'renovacoes' && renovacoesCount > 0 && <span style={{ ...s.badge(c.warning, c.warningBg), fontSize: 11 }}>{renovacoesCount}</span>}

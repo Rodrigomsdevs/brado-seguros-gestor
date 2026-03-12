@@ -12,16 +12,31 @@ import { SinistrosPage } from './SinistrosPage';
 import { RenovacoesPage } from './RenovacoesPage';
 import { RelatoriosPage } from './RelatoriosPage';
 import { AvebacoesPage } from './AverbacoesPage';
+import {
+  LayoutDashboard, Users, FileText, DollarSign, AlertTriangle,
+  RefreshCw, BarChart3, BookOpen, Zap, Moon, Sun, Plus, LogOut
+} from 'lucide-react';
+
+const menuIcons: Record<PageId, React.ReactNode> = {
+  dashboard: <LayoutDashboard size={18} />,
+  segurados: <Users size={18} />,
+  apolices: <FileText size={18} />,
+  faturamento: <DollarSign size={18} />,
+  sinistros: <AlertTriangle size={18} />,
+  renovacoes: <RefreshCw size={18} />,
+  relatorios: <BarChart3 size={18} />,
+  averbacoes: <BookOpen size={18} />,
+};
 
 const menuItems: { id: PageId; label: string }[] = [
-  { id: 'dashboard', label: '📊  Dashboard' },
-  { id: 'segurados', label: '👥  Segurados' },
-  { id: 'apolices', label: '📋  Apólices' },
-  { id: 'faturamento', label: '💰  Faturamento' },
-  { id: 'sinistros', label: '⚠️  Sinistros' },
-  { id: 'renovacoes', label: '🔄  Renovações' },
-  { id: 'relatorios', label: '📈  Relatórios' },
-  { id: 'averbacoes', label: '📝  Averbações' },
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'segurados', label: 'Segurados' },
+  { id: 'apolices', label: 'Apólices' },
+  { id: 'faturamento', label: 'Faturamento' },
+  { id: 'sinistros', label: 'Sinistros' },
+  { id: 'renovacoes', label: 'Renovações' },
+  { id: 'relatorios', label: 'Relatórios' },
+  { id: 'averbacoes', label: 'Averbações' },
 ];
 
 const pageLabels: Record<PageId, string> = {
@@ -71,10 +86,10 @@ const BradoInner: React.FC = () => {
 
   const contextBtn = () => {
     switch (page) {
-      case 'segurados': return <button style={s.btn('primary')} onClick={() => setShowSeguradoModal(true)}>+ Novo Segurado</button>;
-      case 'apolices': return <button style={s.btn('primary')} onClick={() => { setPreSelectedSeguradoId(null); setShowApoliceModal(true); }}>+ Nova Apólice</button>;
-      case 'sinistros': return <button style={s.btn('primary')} onClick={() => setShowSinistroModal(true)}>⚡ Abrir Sinistro</button>;
-      case 'averbacoes': return <button style={s.btn('primary')} onClick={() => setShowAverbacaoModal(true)}>+ Nova Averbação</button>;
+      case 'segurados': return <button style={s.btn('primary')} onClick={() => setShowSeguradoModal(true)}><Plus size={15} /> Novo Segurado</button>;
+      case 'apolices': return <button style={s.btn('primary')} onClick={() => { setPreSelectedSeguradoId(null); setShowApoliceModal(true); }}><Plus size={15} /> Nova Apólice</button>;
+      case 'sinistros': return <button style={s.btn('primary')} onClick={() => setShowSinistroModal(true)}><Zap size={15} /> Abrir Sinistro</button>;
+      case 'averbacoes': return <button style={s.btn('primary')} onClick={() => setShowAverbacaoModal(true)}><Plus size={15} /> Nova Averbação</button>;
       default: return null;
     }
   };
@@ -94,6 +109,7 @@ const BradoInner: React.FC = () => {
             <div key={item.id} style={s.menuItem(page === item.id)} onClick={() => setPage(item.id)}
               onMouseEnter={e => { if (page !== item.id) (e.currentTarget.style.background = c.hoverBg); }}
               onMouseLeave={e => { if (page !== item.id) (e.currentTarget.style.background = 'transparent'); }}>
+              {menuIcons[item.id]}
               <span style={{ flex: 1 }}>{item.label}</span>
               {item.id === 'sinistros' && sinistrosAbertos > 0 && <span style={{ ...s.badge(c.danger, c.dangerBg), fontSize: 11 }}>{sinistrosAbertos}</span>}
               {item.id === 'renovacoes' && renovacoesCount > 0 && <span style={{ ...s.badge(c.warning, c.warningBg), fontSize: 11 }}>{renovacoesCount}</span>}
@@ -124,7 +140,7 @@ const BradoInner: React.FC = () => {
               background: c.cardBg, border: `1px solid ${c.border}`, borderRadius: 20, padding: '6px 14px',
               cursor: 'pointer', fontSize: 18, color: c.text, display: 'flex', alignItems: 'center', gap: 4, lineHeight: 1
             }} title={theme === 'light' ? 'Modo escuro' : 'Modo claro'}>
-              {theme === 'light' ? '🌙' : '☀️'}
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
             </button>
             {/* User badge */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 14px', borderRadius: 24, background: c.cardBg }}>
@@ -135,7 +151,7 @@ const BradoInner: React.FC = () => {
                 <div style={{ fontSize: 13, fontWeight: 500 }}>{usuarioLogado.nome}</div>
                 <div style={{ fontSize: 11, color: c.textMuted }}>{usuarioLogado.perfil}</div>
               </div>
-              <button style={{ background: 'none', border: 'none', color: c.textMuted, cursor: 'pointer', fontSize: 12, marginLeft: 4 }} onClick={() => setUsuarioLogado(null)}>Sair</button>
+              <button style={{ background: 'none', border: 'none', color: c.textMuted, cursor: 'pointer', fontSize: 12, marginLeft: 4, display: 'flex', alignItems: 'center', gap: 4 }} onClick={() => setUsuarioLogado(null)}><LogOut size={14} /> Sair</button>
             </div>
           </div>
         </div>

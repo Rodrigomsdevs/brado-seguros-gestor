@@ -12,16 +12,31 @@ import { SinistrosPage } from './SinistrosPage';
 import { RenovacoesPage } from './RenovacoesPage';
 import { RelatoriosPage } from './RelatoriosPage';
 import { AvebacoesPage } from './AverbacoesPage';
+import {
+  LayoutDashboard, Users, FileText, DollarSign, AlertTriangle,
+  RefreshCw, BarChart3, BookOpen, Zap, Moon, Sun, Plus, LogOut
+} from 'lucide-react';
+
+const menuIcons: Record<PageId, React.ReactNode> = {
+  dashboard: <LayoutDashboard size={18} />,
+  segurados: <Users size={18} />,
+  apolices: <FileText size={18} />,
+  faturamento: <DollarSign size={18} />,
+  sinistros: <AlertTriangle size={18} />,
+  renovacoes: <RefreshCw size={18} />,
+  relatorios: <BarChart3 size={18} />,
+  averbacoes: <BookOpen size={18} />,
+};
 
 const menuItems: { id: PageId; label: string }[] = [
-  { id: 'dashboard', label: '📊  Dashboard' },
-  { id: 'segurados', label: '👥  Segurados' },
-  { id: 'apolices', label: '📋  Apólices' },
-  { id: 'faturamento', label: '💰  Faturamento' },
-  { id: 'sinistros', label: '⚠️  Sinistros' },
-  { id: 'renovacoes', label: '🔄  Renovações' },
-  { id: 'relatorios', label: '📈  Relatórios' },
-  { id: 'averbacoes', label: '📝  Averbações' },
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'segurados', label: 'Segurados' },
+  { id: 'apolices', label: 'Apólices' },
+  { id: 'faturamento', label: 'Faturamento' },
+  { id: 'sinistros', label: 'Sinistros' },
+  { id: 'renovacoes', label: 'Renovações' },
+  { id: 'relatorios', label: 'Relatórios' },
+  { id: 'averbacoes', label: 'Averbações' },
 ];
 
 const pageLabels: Record<PageId, string> = {

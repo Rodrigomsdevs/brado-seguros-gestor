@@ -3,8 +3,6 @@ import { getStyles, getColors, formatCurrency, formatDate, diffDays, statusBadge
 import { useTheme } from './ThemeContext';
 import { Segurado, Apolice, Sinistro, Parcela } from './types';
 import { Users, FileCheck, AlertTriangle, Clock, TrendingUp, TrendingDown } from 'lucide-react';
-import { useTheme } from './ThemeContext';
-import { Segurado, Apolice, Sinistro, Parcela } from './types';
 
 interface DashboardProps {
   segurados: Segurado[];

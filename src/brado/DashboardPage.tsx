@@ -2,6 +2,7 @@ import React from 'react';
 import { getStyles, getColors, formatCurrency, formatDate, diffDays, statusBadge, urgencyBadge } from './styles';
 import { useTheme } from './ThemeContext';
 import { Segurado, Apolice, Sinistro, Parcela } from './types';
+import { Users, FileCheck, AlertTriangle, Clock, TrendingUp, TrendingDown } from 'lucide-react';
 
 interface DashboardProps {
   segurados: Segurado[];
@@ -37,23 +38,29 @@ export const DashboardPage: React.FC<DashboardProps> = ({ segurados, apolices, s
   const getSeguradoNome = (id: number) => segurados.find(seg => seg.id === id)?.nome || '';
 
   const kpis = [
-    { label: 'Total de Segurados', value: segurados.length, color: c.primary },
-    { label: 'Apólices Ativas', value: ativas.length, color: '#4caf50' },
-    { label: 'Sinistros Abertos', value: abertos.length, color: c.danger },
-    { label: 'Vencendo em 30 dias', value: vencendo.length, color: '#ff9800' },
-    { label: 'Faturado no Mês', value: formatCurrency(faturadoMes), color: '#2e7d32' },
-    { label: 'Inadimplência', value: formatCurrency(inadimplencia), color: '#c62828' },
+    { label: 'Total de Segurados', value: segurados.length, color: c.primary, icon: Users },
+    { label: 'Apólices Ativas', value: ativas.length, color: '#4caf50', icon: FileCheck },
+    { label: 'Sinistros Abertos', value: abertos.length, color: c.danger, icon: AlertTriangle },
+    { label: 'Vencendo em 30 dias', value: vencendo.length, color: '#ff9800', icon: Clock },
+    { label: 'Faturado no Mês', value: formatCurrency(faturadoMes), color: '#2e7d32', icon: TrendingUp },
+    { label: 'Inadimplência', value: formatCurrency(inadimplencia), color: '#c62828', icon: TrendingDown },
   ];
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14, marginBottom: 20 }}>
-        {kpis.map((k, i) => (
-          <div key={i} style={s.kpiCard(k.color)}>
-            <div style={{ fontSize: 12, color: c.textSecondary, marginBottom: 6 }}>{k.label}</div>
-            <div style={{ fontSize: 26, fontWeight: 700 }}>{k.value}</div>
-          </div>
-        ))}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, marginBottom: 20 }}>
+        {kpis.map((k, i) => {
+          const Icon = k.icon;
+          return (
+            <div key={i} style={{
+              background: c.cardBg, borderRadius: 12, padding: '20px 20px', position: 'relative', overflow: 'hidden',
+            }}>
+              <Icon size={64} strokeWidth={1} style={{ position: 'absolute', right: -4, top: '50%', transform: 'translateY(-50%)', color: k.color, opacity: 0.12 }} />
+              <div style={{ fontSize: 12, color: c.textSecondary, marginBottom: 8 }}>{k.label}</div>
+              <div style={{ fontSize: 28, fontWeight: 700, color: k.color }}>{k.value}</div>
+            </div>
+          );
+        })}
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>

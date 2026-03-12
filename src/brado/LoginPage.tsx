@@ -27,7 +27,7 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
     <div style={{ minHeight: '100vh', background: c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: fonts, position: 'relative' }}>
       {/* Theme toggle */}
       <button onClick={toggle} style={{ position: 'absolute', top: 20, right: 20, background: c.cardBg, border: `1px solid ${c.border}`, borderRadius: 20, padding: '6px 14px', cursor: 'pointer', fontSize: 13, color: c.text, display: 'flex', alignItems: 'center', gap: 6 }}>
-        {theme === 'light' ? '🌙' : '☀️'} {theme === 'light' ? 'Escuro' : 'Claro'}
+        {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />} {theme === 'light' ? 'Escuro' : 'Claro'}
       </button>
       <div style={{ background: c.modalBg, borderRadius: 16, boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)', padding: '40px 36px', width: 400, textAlign: 'center', color: c.text }}>
         <div style={{ fontSize: 32, fontWeight: 700, color: c.primary, marginBottom: 2 }}>BRADO</div>

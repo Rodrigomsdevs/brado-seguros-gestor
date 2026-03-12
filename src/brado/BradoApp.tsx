@@ -86,10 +86,10 @@ const BradoInner: React.FC = () => {
 
   const contextBtn = () => {
     switch (page) {
-      case 'segurados': return <button style={s.btn('primary')} onClick={() => setShowSeguradoModal(true)}>+ Novo Segurado</button>;
-      case 'apolices': return <button style={s.btn('primary')} onClick={() => { setPreSelectedSeguradoId(null); setShowApoliceModal(true); }}>+ Nova Apólice</button>;
-      case 'sinistros': return <button style={s.btn('primary')} onClick={() => setShowSinistroModal(true)}>⚡ Abrir Sinistro</button>;
-      case 'averbacoes': return <button style={s.btn('primary')} onClick={() => setShowAverbacaoModal(true)}>+ Nova Averbação</button>;
+      case 'segurados': return <button style={s.btn('primary')} onClick={() => setShowSeguradoModal(true)}><Plus size={15} /> Novo Segurado</button>;
+      case 'apolices': return <button style={s.btn('primary')} onClick={() => { setPreSelectedSeguradoId(null); setShowApoliceModal(true); }}><Plus size={15} /> Nova Apólice</button>;
+      case 'sinistros': return <button style={s.btn('primary')} onClick={() => setShowSinistroModal(true)}><Zap size={15} /> Abrir Sinistro</button>;
+      case 'averbacoes': return <button style={s.btn('primary')} onClick={() => setShowAverbacaoModal(true)}><Plus size={15} /> Nova Averbação</button>;
       default: return null;
     }
   };

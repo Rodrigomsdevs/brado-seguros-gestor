@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { s, colors, formatDate, statusBadge } from './styles';
+import { getStyles, getColors, formatDate, statusBadge } from './styles';
+import { useTheme } from './ThemeContext';
 import { Segurado, Averbacao } from './types';
 
 interface Props {
@@ -12,6 +13,9 @@ interface Props {
 }
 
 export const AvebacoesPage: React.FC<Props> = ({ segurados, averbacoes, setAverbacoes, usuarioNome, showModal, setShowModal }) => {
+  const { theme } = useTheme();
+  const c = getColors(theme);
+  const s = getStyles(c);
   const [filtroSegurado, setFiltroSegurado] = useState('');
   const [filtroTipo, setFiltroTipo] = useState('');
   const [form, setForm] = useState({ seguradoId: 0, tipo: '', descricao: '', data: '' });
@@ -26,7 +30,7 @@ export const AvebacoesPage: React.FC<Props> = ({ segurados, averbacoes, setAverb
     setForm({ seguradoId: 0, tipo: '', descricao: '', data: '' });
   };
 
-  const inputProps = { onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = colors.primary), onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = colors.border) };
+  const inputProps = { onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = c.primary), onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = c.border) };
 
   return (
     <div>
@@ -45,7 +49,7 @@ export const AvebacoesPage: React.FC<Props> = ({ segurados, averbacoes, setAverb
         </tr></thead>
         <tbody>
           {filtered.map(a => {
-            const sb = statusBadge(a.status);
+            const sb = statusBadge(a.status, c);
             return (
               <tr key={a.id}>
                 <td style={s.td}>{formatDate(a.data)}</td>
@@ -79,7 +83,7 @@ export const AvebacoesPage: React.FC<Props> = ({ segurados, averbacoes, setAverb
             <div style={s.fieldGroup}><label style={s.label}>Descrição *</label><input style={s.input} value={form.descricao} onChange={e => setForm({ ...form, descricao: e.target.value })} {...inputProps} /></div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div style={s.fieldGroup}><label style={s.label}>Data *</label><input type="date" style={s.input} value={form.data} onChange={e => setForm({ ...form, data: e.target.value })} {...inputProps} /></div>
-              <div style={s.fieldGroup}><label style={s.label}>Lançado por</label><input style={{ ...s.input, background: '#f5f5f5' }} value={usuarioNome} readOnly /></div>
+              <div style={s.fieldGroup}><label style={s.label}>Lançado por</label><input style={{ ...s.input, background: c.readonlyBg }} value={usuarioNome} readOnly /></div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 18 }}>
               <button style={s.btn('secondary')} onClick={() => setShowModal(false)}>Cancelar</button>

@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import { s, colors, fonts, diffDays } from './styles';
+import React, { useState } from 'react';
+import { getStyles, getColors, diffDays } from './styles';
+import { useTheme, ThemeProvider } from './ThemeContext';
 import { Usuario, Segurado, Apolice, Endosso, Sinistro, Parcela, Averbacao, PageId } from './types';
 import { USUARIOS, SEGURADOS_INIT, APOLICES_INIT, ENDOSSOS_INIT, SINISTROS_INIT, AVERBACOES_INIT, gerarParcelas } from './seedData';
 import { LoginPage } from './LoginPage';
@@ -28,7 +29,11 @@ const pageLabels: Record<PageId, string> = {
   sinistros: 'Sinistros', renovacoes: 'Renovações', relatorios: 'Relatórios', averbacoes: 'Averbações',
 };
 
-export const BradoApp: React.FC = () => {
+const BradoInner: React.FC = () => {
+  const { theme, toggle } = useTheme();
+  const c = getColors(theme);
+  const s = getStyles(c);
+
   const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
   const [page, setPage] = useState<PageId>('dashboard');
   const [segurados, setSegurados] = useState<Segurado[]>(SEGURADOS_INIT);
@@ -38,7 +43,6 @@ export const BradoApp: React.FC = () => {
   const [averbacoes, setAverbacoes] = useState<Averbacao[]>(AVERBACOES_INIT);
   const [parcelas, setParcelas] = useState<Parcela[]>(() => gerarParcelas(APOLICES_INIT));
 
-  // Modal states
   const [showSeguradoModal, setShowSeguradoModal] = useState(false);
   const [showApoliceModal, setShowApoliceModal] = useState(false);
   const [showEndossoModal, setShowEndossoModal] = useState(false);
@@ -47,7 +51,6 @@ export const BradoApp: React.FC = () => {
   const [preSelectedSeguradoId, setPreSelectedSeguradoId] = useState<number | null>(null);
   const [endossoApoliceId, setEndossoApoliceId] = useState<number | null>(null);
 
-  // Badges
   const sinistrosAbertos = sinistros.filter(si => si.status === 'Aberto' || si.status === 'Em Análise').length;
   const renovacoesCount = apolices.filter(a => a.status === 'Ativa' && diffDays(a.vigFim) >= 0 && diffDays(a.vigFim) <= 30).length;
 
@@ -81,27 +84,27 @@ export const BradoApp: React.FC = () => {
       {/* Sidebar */}
       <div style={s.sidebar}>
         <div style={{ marginBottom: 24 }}>
-          <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.5, color: colors.textMuted, fontWeight: 600 }}>Corretora de Seguros</div>
-          <div style={{ fontSize: 26, fontWeight: 800, color: colors.primary, lineHeight: 1.2 }}>BRADO</div>
-          <div style={{ fontSize: 12, color: colors.textSecondary }}>Sistema de Gestão</div>
+          <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.5, color: c.textMuted, fontWeight: 600 }}>Corretora de Seguros</div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: c.primary, lineHeight: 1.2 }}>BRADO</div>
+          <div style={{ fontSize: 12, color: c.textSecondary }}>Sistema de Gestão</div>
         </div>
 
         <nav style={{ flex: 1 }}>
           {menuItems.map(item => (
             <div key={item.id} style={s.menuItem(page === item.id)} onClick={() => setPage(item.id)}
-              onMouseEnter={e => { if (page !== item.id) (e.currentTarget.style.background = '#eee'); }}
+              onMouseEnter={e => { if (page !== item.id) (e.currentTarget.style.background = c.hoverBg); }}
               onMouseLeave={e => { if (page !== item.id) (e.currentTarget.style.background = 'transparent'); }}>
               <span style={{ flex: 1 }}>{item.label}</span>
-              {item.id === 'sinistros' && sinistrosAbertos > 0 && <span style={{ ...s.badge(colors.danger, colors.dangerBg), fontSize: 11 }}>{sinistrosAbertos}</span>}
-              {item.id === 'renovacoes' && renovacoesCount > 0 && <span style={{ ...s.badge(colors.warning, colors.warningBg), fontSize: 11 }}>{renovacoesCount}</span>}
+              {item.id === 'sinistros' && sinistrosAbertos > 0 && <span style={{ ...s.badge(c.danger, c.dangerBg), fontSize: 11 }}>{sinistrosAbertos}</span>}
+              {item.id === 'renovacoes' && renovacoesCount > 0 && <span style={{ ...s.badge(c.warning, c.warningBg), fontSize: 11 }}>{renovacoesCount}</span>}
             </div>
           ))}
         </nav>
 
-        <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: 14, marginTop: 14 }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: colors.textMuted, marginBottom: 8 }}>Fluxo Operacional</div>
+        <div style={{ borderTop: `1px solid ${c.border}`, paddingTop: 14, marginTop: 14 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: c.textMuted, marginBottom: 8 }}>Fluxo Operacional</div>
           {['1. Cadastrar Segurado', '2. Lançar Apólice', '3. Lançar Endosso', '4. Controlar Pagamentos', '5. Gerir Sinistros', '6. Averbações Manuais'].map(t => (
-            <div key={t} style={{ fontSize: 11, color: colors.textSecondary, marginBottom: 3 }}>{t}</div>
+            <div key={t} style={{ fontSize: 11, color: c.textSecondary, marginBottom: 3 }}>{t}</div>
           ))}
         </div>
       </div>
@@ -111,20 +114,28 @@ export const BradoApp: React.FC = () => {
         {/* Header */}
         <div style={s.header}>
           <div>
-            <div style={{ fontSize: 12, color: colors.textMuted }}>Brado Corretora · Março 2026</div>
+            <div style={{ fontSize: 12, color: c.textMuted }}>Brado Corretora · Março 2026</div>
             <div style={{ fontSize: 22, fontWeight: 700, marginTop: 2 }}>{pageLabels[page]}</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             {contextBtn()}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 14px', borderRadius: 24, background: colors.cardBg }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: colors.primary, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600 }}>
+            {/* Theme toggle */}
+            <button onClick={toggle} style={{
+              background: c.cardBg, border: `1px solid ${c.border}`, borderRadius: 20, padding: '6px 14px',
+              cursor: 'pointer', fontSize: 18, color: c.text, display: 'flex', alignItems: 'center', gap: 4, lineHeight: 1
+            }} title={theme === 'light' ? 'Modo escuro' : 'Modo claro'}>
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+            {/* User badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 14px', borderRadius: 24, background: c.cardBg }}>
+              <div style={{ width: 32, height: 32, borderRadius: '50%', background: c.primary, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600 }}>
                 {usuarioLogado.iniciais}
               </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500 }}>{usuarioLogado.nome}</div>
-                <div style={{ fontSize: 11, color: colors.textMuted }}>{usuarioLogado.perfil}</div>
+                <div style={{ fontSize: 11, color: c.textMuted }}>{usuarioLogado.perfil}</div>
               </div>
-              <button style={{ background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer', fontSize: 12, marginLeft: 4 }} onClick={() => setUsuarioLogado(null)}>Sair</button>
+              <button style={{ background: 'none', border: 'none', color: c.textMuted, cursor: 'pointer', fontSize: 12, marginLeft: 4 }} onClick={() => setUsuarioLogado(null)}>Sair</button>
             </div>
           </div>
         </div>
@@ -142,18 +153,15 @@ export const BradoApp: React.FC = () => {
         </div>
       </div>
 
-      {/* Segurado modal is inside SeguradosPage but we need to trigger from header */}
-      {showSeguradoModal && page === 'segurados' && (() => {
-        // Render inline modal for new segurado
-        const emptyEndereco = { logradouro: '', numero: '', bairro: '', cidade: '', uf: '', cep: '' };
-        return <SeguradoModal segurados={segurados} setSegurados={setSegurados} onClose={() => setShowSeguradoModal(false)} />;
-      })()}
+      {/* Segurado modal from header */}
+      {showSeguradoModal && page === 'segurados' && (
+        <SeguradoModal c={c} s={s} setSegurados={setSegurados} onClose={() => setShowSeguradoModal(false)} />
+      )}
     </div>
   );
 };
 
-// Standalone modal for creating segurado from header button
-const SeguradoModal: React.FC<{ segurados: Segurado[]; setSegurados: React.Dispatch<React.SetStateAction<Segurado[]>>; onClose: () => void }> = ({ setSegurados, onClose }) => {
+const SeguradoModal: React.FC<{ c: any; s: any; setSegurados: React.Dispatch<React.SetStateAction<Segurado[]>>; onClose: () => void }> = ({ c, s, setSegurados, onClose }) => {
   const emptyEndereco = { logradouro: '', numero: '', bairro: '', cidade: '', uf: '', cep: '' };
   const [form, setForm] = useState({ nome: '', cpfCnpj: '', email: '', telefone: '', endereco: { ...emptyEndereco } });
 
@@ -163,11 +171,11 @@ const SeguradoModal: React.FC<{ segurados: Segurado[]; setSegurados: React.Dispa
     onClose();
   };
 
-  const inputProps = { onFocus: (e: React.FocusEvent<HTMLInputElement>) => (e.target.style.borderColor = colors.primary), onBlur: (e: React.FocusEvent<HTMLInputElement>) => (e.target.style.borderColor = colors.border) };
+  const inputProps = { onFocus: (e: React.FocusEvent<HTMLInputElement>) => (e.target.style.borderColor = c.primary), onBlur: (e: React.FocusEvent<HTMLInputElement>) => (e.target.style.borderColor = c.border) };
 
   return (
     <div style={s.overlay} onClick={onClose}>
-      <div style={s.modal} onClick={e => e.stopPropagation()}>
+      <div style={s.modal} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
         <h3 style={{ margin: '0 0 20px', fontSize: 18 }}>Novo Segurado</h3>
         <div style={s.fieldGroup}><label style={s.label}>Nome completo *</label><input style={s.input} value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} {...inputProps} /></div>
         <div style={s.fieldGroup}><label style={s.label}>CPF/CNPJ *</label><input style={s.input} value={form.cpfCnpj} onChange={e => setForm({ ...form, cpfCnpj: e.target.value })} {...inputProps} /></div>
@@ -175,7 +183,7 @@ const SeguradoModal: React.FC<{ segurados: Segurado[]; setSegurados: React.Dispa
           <div style={s.fieldGroup}><label style={s.label}>E-mail</label><input style={s.input} value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} {...inputProps} /></div>
           <div style={s.fieldGroup}><label style={s.label}>Telefone</label><input style={s.input} value={form.telefone} onChange={e => setForm({ ...form, telefone: e.target.value })} {...inputProps} /></div>
         </div>
-        <div style={{ fontSize: 14, fontWeight: 600, margin: '8px 0 10px', color: colors.textSecondary }}>Endereço</div>
+        <div style={{ fontSize: 14, fontWeight: 600, margin: '8px 0 10px', color: c.textSecondary }}>Endereço</div>
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 12 }}>
           <div style={s.fieldGroup}><label style={s.label}>Logradouro</label><input style={s.input} value={form.endereco.logradouro} onChange={e => setForm({ ...form, endereco: { ...form.endereco, logradouro: e.target.value } })} {...inputProps} /></div>
           <div style={s.fieldGroup}><label style={s.label}>Número</label><input style={s.input} value={form.endereco.numero} onChange={e => setForm({ ...form, endereco: { ...form.endereco, numero: e.target.value } })} {...inputProps} /></div>
@@ -194,3 +202,9 @@ const SeguradoModal: React.FC<{ segurados: Segurado[]; setSegurados: React.Dispa
     </div>
   );
 };
+
+export const BradoApp: React.FC = () => (
+  <ThemeProvider>
+    <BradoInner />
+  </ThemeProvider>
+);

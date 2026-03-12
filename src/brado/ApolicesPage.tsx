@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { s, colors, formatDate, formatCurrency, statusBadge } from './styles';
+import { getStyles, getColors, formatDate, formatCurrency, statusBadge } from './styles';
+import { useTheme } from './ThemeContext';
 import { Segurado, Apolice, Endosso, Parcela } from './types';
 
 interface Props {
@@ -22,6 +23,10 @@ export const ApolicesPage: React.FC<Props> = ({
   segurados, apolices, setApolices, endossos, setEndossos, parcelas, setParcelas,
   preSelectedSeguradoId, showApoliceModal, setShowApoliceModal, showEndossoModal, setShowEndossoModal, endossoApoliceId
 }) => {
+  const { theme } = useTheme();
+  const c = getColors(theme);
+  const s = getStyles(c);
+
   const [filtroStatus, setFiltroStatus] = useState('');
   const [filtroRamo, setFiltroRamo] = useState('');
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -32,7 +37,7 @@ export const ApolicesPage: React.FC<Props> = ({
   React.useEffect(() => { if (endossoApoliceId) setEndForm(f => ({ ...f, apoliceId: endossoApoliceId })); }, [endossoApoliceId]);
 
   const filtered = apolices.filter(a => (!filtroStatus || a.status === filtroStatus) && (!filtroRamo || a.ramo === filtroRamo));
-  const getNome = (id: number) => segurados.find(s => s.id === id)?.nome || '';
+  const getNome = (id: number) => segurados.find(seg => seg.id === id)?.nome || '';
 
   const salvarApolice = () => {
     if (!apForm.seguradoId || !apForm.numero || !apForm.vigIni || !apForm.vigFim || !apForm.premio) return;
@@ -42,7 +47,6 @@ export const ApolicesPage: React.FC<Props> = ({
       formaPagamento: apForm.formaPagamento, status: 'Ativa'
     };
     setApolices(prev => [...prev, novaAp]);
-    // gerar parcelas
     const hoje = new Date('2026-03-12');
     const valorP = Math.round((novaAp.premio / novaAp.numParcelas) * 100) / 100;
     const ini = new Date(novaAp.vigIni);
@@ -63,7 +67,7 @@ export const ApolicesPage: React.FC<Props> = ({
     setEndForm({ apoliceId: 0, tipo: 'Inclusão', descricao: '', data: '', valorAjuste: '' });
   };
 
-  const inputProps = { onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = colors.primary), onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = colors.border) };
+  const inputProps = { onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = c.primary), onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = c.border) };
 
   return (
     <div>
@@ -82,7 +86,7 @@ export const ApolicesPage: React.FC<Props> = ({
         </tr></thead>
         <tbody>
           {filtered.map(a => {
-            const sb = statusBadge(a.status);
+            const sb = statusBadge(a.status, c);
             const apEndossos = endossos.filter(e => e.apoliceId === a.id);
             return (
               <React.Fragment key={a.id}>
@@ -99,8 +103,8 @@ export const ApolicesPage: React.FC<Props> = ({
                   </td>
                 </tr>
                 {expandedId === a.id && apEndossos.length > 0 && (
-                  <tr><td colSpan={8} style={{ padding: '8px 24px 16px', background: colors.cardBg }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: colors.textSecondary }}>Endossos vinculados</div>
+                  <tr><td colSpan={8} style={{ padding: '8px 24px 16px', background: c.cardBg }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: c.textSecondary }}>Endossos vinculados</div>
                     <table style={{ ...s.table, fontSize: 13 }}>
                       <thead><tr>{['Tipo', 'Descrição', 'Data', 'Valor Ajuste'].map(h => <th key={h} style={{ ...s.th, fontSize: 11 }}>{h}</th>)}</tr></thead>
                       <tbody>{apEndossos.map(en => (
@@ -118,7 +122,6 @@ export const ApolicesPage: React.FC<Props> = ({
         </tbody>
       </table>
 
-      {/* Modal Nova Apólice */}
       {showApoliceModal && (
         <div style={s.overlay} onClick={() => setShowApoliceModal(false)}>
           <div style={s.modal} onClick={e => e.stopPropagation()}>
@@ -155,14 +158,13 @@ export const ApolicesPage: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Modal Novo Endosso */}
       {showEndossoModal && (
         <div style={s.overlay} onClick={() => setShowEndossoModal(false)}>
           <div style={s.modal} onClick={e => e.stopPropagation()}>
             <h3 style={{ margin: '0 0 16px', fontSize: 18 }}>Novo Endosso</h3>
             {endForm.apoliceId > 0 && (() => {
               const ap = apolices.find(a => a.id === endForm.apoliceId);
-              return ap ? <div style={{ background: colors.cardBg, borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 13 }}>
+              return ap ? <div style={{ background: c.cardBg, borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 13 }}>
                 <strong>{ap.numero}</strong> — {getNome(ap.seguradoId)}
               </div> : null;
             })()}

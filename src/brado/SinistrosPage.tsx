@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { s, colors, formatDate, formatCurrency, statusBadge } from './styles';
+import { getStyles, getColors, formatDate, formatCurrency, statusBadge } from './styles';
+import { useTheme } from './ThemeContext';
 import { Segurado, Apolice, Sinistro } from './types';
 
 interface Props {
@@ -12,6 +13,9 @@ interface Props {
 }
 
 export const SinistrosPage: React.FC<Props> = ({ segurados, apolices, sinistros, setSinistros, showModal, setShowModal }) => {
+  const { theme } = useTheme();
+  const c = getColors(theme);
+  const s = getStyles(c);
   const [filtroStatus, setFiltroStatus] = useState('');
   const [form, setForm] = useState({ seguradoId: 0, apoliceId: 0, dataOcorrencia: '', descricao: '', valorEstimado: '' });
 
@@ -34,7 +38,7 @@ export const SinistrosPage: React.FC<Props> = ({ segurados, apolices, sinistros,
     setForm({ seguradoId: 0, apoliceId: 0, dataOcorrencia: '', descricao: '', valorEstimado: '' });
   };
 
-  const inputProps = { onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = colors.primary), onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = colors.border) };
+  const inputProps = { onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = c.primary), onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = c.border) };
 
   return (
     <div>
@@ -49,7 +53,7 @@ export const SinistrosPage: React.FC<Props> = ({ segurados, apolices, sinistros,
         </tr></thead>
         <tbody>
           {filtered.map(si => {
-            const sb = statusBadge(si.status);
+            const sb = statusBadge(si.status, c);
             return (
               <tr key={si.id}>
                 <td style={s.td}>#{si.id}</td>

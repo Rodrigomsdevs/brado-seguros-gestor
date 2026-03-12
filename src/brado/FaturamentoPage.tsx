@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { s, colors, formatDate, formatCurrency, statusBadge } from './styles';
+import { getStyles, getColors, formatDate, formatCurrency, statusBadge } from './styles';
+import { useTheme } from './ThemeContext';
 import { Segurado, Apolice, Parcela } from './types';
 
 interface Props {
@@ -10,11 +11,14 @@ interface Props {
 }
 
 export const FaturamentoPage: React.FC<Props> = ({ segurados, apolices, parcelas, setParcelas }) => {
+  const { theme } = useTheme();
+  const c = getColors(theme);
+  const s = getStyles(c);
   const [filtroStatus, setFiltroStatus] = useState('');
 
-  const totalReceber = parcelas.filter(p => p.status === 'Pendente').reduce((s, p) => s + p.valor, 0);
-  const totalRecebido = parcelas.filter(p => p.status === 'Pago').reduce((s, p) => s + p.valor, 0);
-  const totalAtraso = parcelas.filter(p => p.status === 'Atrasado').reduce((s, p) => s + p.valor, 0);
+  const totalReceber = parcelas.filter(p => p.status === 'Pendente').reduce((sum, p) => sum + p.valor, 0);
+  const totalRecebido = parcelas.filter(p => p.status === 'Pago').reduce((sum, p) => sum + p.valor, 0);
+  const totalAtraso = parcelas.filter(p => p.status === 'Atrasado').reduce((sum, p) => sum + p.valor, 0);
 
   const filtered = parcelas.filter(p => !filtroStatus || p.status === filtroStatus);
   const getApolice = (id: number) => apolices.find(a => a.id === id);
@@ -25,18 +29,18 @@ export const FaturamentoPage: React.FC<Props> = ({ segurados, apolices, parcelas
   };
 
   const cards = [
-    { label: 'Total a Receber', value: formatCurrency(totalReceber), color: colors.primary },
+    { label: 'Total a Receber', value: formatCurrency(totalReceber), color: c.primary },
     { label: 'Total Recebido', value: formatCurrency(totalRecebido), color: '#2e7d32' },
-    { label: 'Total em Atraso', value: formatCurrency(totalAtraso), color: colors.danger },
+    { label: 'Total em Atraso', value: formatCurrency(totalAtraso), color: c.danger },
   ];
 
   return (
     <div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 20 }}>
-        {cards.map((c, i) => (
-          <div key={i} style={s.kpiCard(c.color)}>
-            <div style={{ fontSize: 12, color: colors.textSecondary, marginBottom: 6 }}>{c.label}</div>
-            <div style={{ fontSize: 22, fontWeight: 700 }}>{c.value}</div>
+        {cards.map((card, i) => (
+          <div key={i} style={s.kpiCard(card.color)}>
+            <div style={{ fontSize: 12, color: c.textSecondary, marginBottom: 6 }}>{card.label}</div>
+            <div style={{ fontSize: 22, fontWeight: 700 }}>{card.value}</div>
           </div>
         ))}
       </div>
@@ -54,7 +58,7 @@ export const FaturamentoPage: React.FC<Props> = ({ segurados, apolices, parcelas
         <tbody>
           {filtered.slice(0, 50).map(p => {
             const ap = getApolice(p.apoliceId);
-            const sb = statusBadge(p.status);
+            const sb = statusBadge(p.status, c);
             return (
               <tr key={p.id}>
                 <td style={s.td}>{ap?.numero}</td>

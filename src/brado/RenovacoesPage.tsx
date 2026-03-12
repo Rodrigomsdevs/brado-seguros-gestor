@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { s, colors, formatDate, formatCurrency, urgencyBadge, diffDays } from './styles';
+import { getStyles, getColors, formatDate, formatCurrency, urgencyBadge, diffDays } from './styles';
+import { useTheme } from './ThemeContext';
 import { Segurado, Apolice } from './types';
 
 interface Props {
@@ -9,6 +10,9 @@ interface Props {
 }
 
 export const RenovacoesPage: React.FC<Props> = ({ segurados, apolices, setApolices }) => {
+  const { theme } = useTheme();
+  const c = getColors(theme);
+  const s = getStyles(c);
   const [renovarId, setRenovarId] = useState<number | null>(null);
   const [novaVigFim, setNovaVigFim] = useState('');
 
@@ -32,7 +36,7 @@ export const RenovacoesPage: React.FC<Props> = ({ segurados, apolices, setApolic
         <tbody>
           {vencendo.map(a => {
             const dias = diffDays(a.vigFim);
-            const [uc, ub] = urgencyBadge(dias);
+            const [uc, ub] = urgencyBadge(dias, c);
             return (
               <tr key={a.id}>
                 <td style={s.td}>{a.numero}</td>
@@ -55,7 +59,7 @@ export const RenovacoesPage: React.FC<Props> = ({ segurados, apolices, setApolic
               </tr>
             );
           })}
-          {vencendo.length === 0 && <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: colors.textMuted }}>Nenhuma apólice vencendo nos próximos 30 dias</td></tr>}
+          {vencendo.length === 0 && <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: c.textMuted }}>Nenhuma apólice vencendo nos próximos 30 dias</td></tr>}
         </tbody>
       </table>
     </div>

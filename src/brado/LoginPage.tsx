@@ -30,41 +30,82 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
       minHeight: '100vh', display: 'flex', fontFamily: fonts, position: 'relative',
       background: c.bg,
     }}>
-      {/* Left panel — form (30%) */}
-      <div style={{
-        width: '30%', minWidth: 380, display: 'flex', flexDirection: 'column',
-        justifyContent: 'center', alignItems: 'center', padding: '40px 36px',
-        background: c.modalBg, position: 'relative', zIndex: 1,
-        boxShadow: theme === 'light'
-          ? '4px 0 30px rgba(0,0,0,0.06)'
-          : '4px 0 30px rgba(0,0,0,0.3)',
+      {/* Theme toggle */}
+      <button onClick={toggle} style={{
+        position: 'absolute', top: 20, right: 20, zIndex: 10, background: 'rgba(255,255,255,0.15)',
+        backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 24,
+        padding: '6px 14px', cursor: 'pointer', fontSize: 12, color: '#fff',
+        display: 'flex', alignItems: 'center', gap: 6,
       }}>
-        {/* Theme toggle */}
-        <button onClick={toggle} style={{
-          position: 'absolute', top: 20, right: 20, background: c.cardBg,
-          border: `1px solid ${c.border}`, borderRadius: 24, padding: '6px 14px',
-          cursor: 'pointer', fontSize: 12, color: c.textSecondary, display: 'flex',
-          alignItems: 'center', gap: 6,
-        }}>
-          {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
-          {theme === 'light' ? 'Escuro' : 'Claro'}
-        </button>
+        {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
+        {theme === 'light' ? 'Escuro' : 'Claro'}
+      </button>
 
-        <div style={{ width: '100%', maxWidth: 320 }}>
+      {/* Left — image area with strong right border */}
+      <div style={{
+        flex: 1, position: 'relative', overflow: 'hidden',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: theme === 'light'
+          ? 'linear-gradient(135deg, #dce8f5 0%, #c5d9f0 50%, #b8cfe8 100%)'
+          : 'linear-gradient(135deg, #141c28 0%, #1a2636 50%, #0f1820 100%)',
+        borderRight: `5px solid ${c.primary}`,
+      }}>
+        <img
+          src={loginBg}
+          alt="Proteção e segurança"
+          style={{
+            maxWidth: '65%', maxHeight: '65%', objectFit: 'contain',
+            opacity: theme === 'light' ? 0.85 : 0.6,
+          }}
+        />
+        {/* Bottom text on image */}
+        <div style={{
+          position: 'absolute', bottom: 44, left: 40, right: 40, textAlign: 'center',
+        }}>
+          <div style={{
+            fontSize: 24, fontWeight: 700,
+            color: theme === 'light' ? '#1a3a5c' : '#c0d8f0',
+            marginBottom: 6,
+          }}>
+            Proteção completa para o que importa
+          </div>
+          <div style={{
+            fontSize: 14, color: theme === 'light' ? '#5a7a9a' : '#7a9aba',
+          }}>
+            Auto · Vida · Empresarial · Residencial
+          </div>
+        </div>
+      </div>
+
+      {/* Right — floating form */}
+      <div style={{
+        width: 440, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '40px 32px',
+        background: theme === 'light'
+          ? 'linear-gradient(180deg, #f4f6f9 0%, #eaecf0 100%)'
+          : 'linear-gradient(180deg, #1e1e1e 0%, #181818 100%)',
+      }}>
+        <div style={{
+          width: '100%', maxWidth: 360, background: c.modalBg, borderRadius: 20,
+          padding: '40px 32px 32px',
+          boxShadow: theme === 'light'
+            ? '0 8px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.04)'
+            : '0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)',
+        }}>
           {/* Logo */}
           <div style={{
-            width: 56, height: 56, borderRadius: 14, margin: '0 auto 14px',
+            width: 52, height: 52, borderRadius: 14, margin: '0 auto 12px',
             background: `linear-gradient(135deg, ${c.primary}, ${theme === 'light' ? '#1565c0' : '#82b1ff'})`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: `0 6px 20px ${c.primary}33`,
           }}>
-            <Shield size={28} color="#fff" strokeWidth={2} />
+            <Shield size={26} color="#fff" strokeWidth={2} />
           </div>
-          <div style={{ fontSize: 26, fontWeight: 800, color: c.text, textAlign: 'center', letterSpacing: 2, marginBottom: 2 }}>BRADO</div>
-          <div style={{ fontSize: 12, color: c.textMuted, textAlign: 'center', marginBottom: 36, letterSpacing: 0.5 }}>Corretora de Seguros</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: c.text, textAlign: 'center', letterSpacing: 2, marginBottom: 1 }}>BRADO</div>
+          <div style={{ fontSize: 11, color: c.textMuted, textAlign: 'center', marginBottom: 30, letterSpacing: 0.5 }}>Corretora de Seguros</div>
 
           {/* Email */}
-          <div style={{ marginBottom: 14, position: 'relative' }}>
+          <div style={{ marginBottom: 12, position: 'relative' }}>
             <div style={{
               position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
               color: focusField === 'email' ? c.primary : c.textMuted, transition: 'color 0.2s',
@@ -73,8 +114,8 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
             </div>
             <input
               style={{
-                ...s.input, textAlign: 'left', paddingLeft: 40, borderRadius: 10, padding: '11px 12px 11px 40px',
-                fontSize: 14, transition: 'all 0.2s',
+                ...s.input, textAlign: 'left', paddingLeft: 40, borderRadius: 10,
+                padding: '11px 12px 11px 40px', fontSize: 14, transition: 'all 0.2s',
                 borderColor: focusField === 'email' ? c.primary : c.border,
                 boxShadow: focusField === 'email' ? `0 0 0 3px ${c.primary}18` : 'none',
               }}
@@ -87,7 +128,7 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
           </div>
 
           {/* Password */}
-          <div style={{ marginBottom: 18, position: 'relative' }}>
+          <div style={{ marginBottom: 16, position: 'relative' }}>
             <div style={{
               position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
               color: focusField === 'senha' ? c.primary : c.textMuted, transition: 'color 0.2s',
@@ -96,8 +137,8 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
             </div>
             <input
               style={{
-                ...s.input, textAlign: 'left', paddingLeft: 40, borderRadius: 10, padding: '11px 12px 11px 40px',
-                fontSize: 14, transition: 'all 0.2s',
+                ...s.input, textAlign: 'left', paddingLeft: 40, borderRadius: 10,
+                padding: '11px 12px 11px 40px', fontSize: 14, transition: 'all 0.2s',
                 borderColor: focusField === 'senha' ? c.primary : c.border,
                 boxShadow: focusField === 'senha' ? `0 0 0 3px ${c.primary}18` : 'none',
               }}
@@ -126,8 +167,7 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
               ...s.btn('primary'), width: '100%', justifyContent: 'center',
               padding: '11px 18px', fontSize: 15, borderRadius: 10,
               background: `linear-gradient(135deg, ${c.primary}, ${theme === 'light' ? '#1565c0' : '#82b1ff'})`,
-              boxShadow: `0 4px 16px ${c.primary}40`,
-              fontWeight: 600,
+              boxShadow: `0 4px 16px ${c.primary}40`, fontWeight: 600,
             }}
             onClick={handleLogin}
           >
@@ -135,8 +175,8 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
           </button>
 
           {/* Demo users */}
-          <div style={{ marginTop: 28, paddingTop: 18, borderTop: `1px solid ${c.border}` }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: c.textMuted, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>
+          <div style={{ marginTop: 24, paddingTop: 16, borderTop: `1px solid ${c.border}` }}>
+            <div style={{ fontSize: 10, fontWeight: 600, color: c.textMuted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
               Acesso rápido
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -145,7 +185,7 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
                   key={u.id}
                   style={{
                     background: c.cardBg, border: `1px solid ${c.border}`, borderRadius: 10,
-                    padding: '8px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '8px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10,
                     transition: 'all 0.15s', textAlign: 'left', width: '100%', color: c.text,
                   }}
                   onClick={() => { setEmail(u.email); setSenha(u.senha); }}
@@ -159,12 +199,12 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
                   }}
                 >
                   <div style={{
-                    width: 32, height: 32, borderRadius: 8,
+                    width: 30, height: 30, borderRadius: 8,
                     background: `linear-gradient(135deg, ${c.primary}22, ${c.primary}11)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     color: c.primary, flexShrink: 0,
                   }}>
-                    <User size={16} />
+                    <User size={15} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 12, fontWeight: 600 }}>{u.nome}</div>
@@ -174,42 +214,6 @@ export const LoginPage: React.FC<LoginProps> = ({ onLogin, usuarios }) => {
                 </button>
               ))}
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right panel — image (70%) */}
-      <div style={{
-        flex: 1, position: 'relative', overflow: 'hidden',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: theme === 'light'
-          ? 'linear-gradient(135deg, #e3eefc 0%, #d0e2f7 50%, #c5daf0 100%)'
-          : 'linear-gradient(135deg, #1a2332 0%, #1e2a3a 50%, #162030 100%)',
-      }}>
-        <img
-          src={loginBg}
-          alt="Proteção e segurança para você e sua família"
-          style={{
-            maxWidth: '70%', maxHeight: '70%', objectFit: 'contain',
-            borderRadius: 24, opacity: theme === 'light' ? 0.9 : 0.7,
-          }}
-        />
-        {/* Overlay text */}
-        <div style={{
-          position: 'absolute', bottom: 48, left: 48, right: 48,
-          textAlign: 'center',
-        }}>
-          <div style={{
-            fontSize: 22, fontWeight: 700,
-            color: theme === 'light' ? '#1a3a5c' : '#c0d8f0',
-            marginBottom: 6,
-          }}>
-            Proteção completa para o que importa
-          </div>
-          <div style={{
-            fontSize: 14, color: theme === 'light' ? '#5a7a9a' : '#7a9aba',
-          }}>
-            Auto · Vida · Empresarial · Residencial
           </div>
         </div>
       </div>
